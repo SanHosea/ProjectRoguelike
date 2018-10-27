@@ -37,9 +37,6 @@ public class RushAttack : SkillBase {
 			
 			if (checkTime >= 5.0f)
 			{
-				characterPos = character.transform.position;
-				monsterPos = monster.transform.position;
-				rushDir = characterPos - monsterPos;
 				monster.CurState = STATE.ATTACK;
 			}
 		}
@@ -53,6 +50,10 @@ public class RushAttack : SkillBase {
 	{
 		if (CanFireSkill())
 		{
+			characterPos = character.transform.position;
+			monsterPos = monster.transform.position;
+			rushDir = characterPos - monsterPos;
+			rushDir.Normalize();
 			StartCoroutine(Attack(character));
 			CurTime = 0;
 			checkTime = 0;
@@ -63,7 +64,6 @@ public class RushAttack : SkillBase {
 	// 2. 돌진이 끝난 이후에 판정처리가 들어가서 느림
 	public IEnumerator Attack(CharacterBase character)
 	{
-		rushDir.Normalize();
 		float theta = ContAngle(-monster.transform.up, rushDir);	
 		// 공격범위 표시 
 		attackArea.gameObject.SetActive(true);
@@ -98,7 +98,8 @@ public class RushAttack : SkillBase {
 
 			yield return null;
 		}
-
+		CurTime = 0;
+		checkTime = 0;
 		monster.CurState = STATE.TRACE;
 	}
 
