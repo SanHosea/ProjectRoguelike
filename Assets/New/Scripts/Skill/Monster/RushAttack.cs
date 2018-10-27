@@ -39,6 +39,7 @@ public class RushAttack : SkillBase {
 			{
 				characterPos = character.transform.position;
 				monsterPos = monster.transform.position;
+				rushDir = characterPos - monsterPos;
 				monster.CurState = STATE.ATTACK;
 			}
 		}
@@ -62,7 +63,7 @@ public class RushAttack : SkillBase {
 	// 2. 돌진이 끝난 이후에 판정처리가 들어가서 느림
 	public IEnumerator Attack(CharacterBase character)
 	{
-		rushDir = characterPos - monsterPos;
+		rushDir.Normalize();
 		float theta = ContAngle(-monster.transform.up, rushDir);	
 		// 공격범위 표시 
 		attackArea.gameObject.SetActive(true);
@@ -79,7 +80,7 @@ public class RushAttack : SkillBase {
 		// 돌진
 		// 여기서부터 만들어야 함
 		attackArea.gameObject.SetActive(false);
-		StartCoroutine(Rush(monsterPos, rushDir.normalized * 3));
+		StartCoroutine(Rush(monsterPos, rushDir * 3));
 	}
 
 	private IEnumerator Rush(Vector2 start, Vector2 end)
@@ -92,12 +93,13 @@ public class RushAttack : SkillBase {
 
 			if (time >= 1.0f)
 			{
-				monster.CurState = STATE.TRACE;
 				break;
 			}
 
 			yield return null;
 		}
+
+		monster.CurState = STATE.TRACE;
 	}
 
 	// 두 벡터의 회전각은 0 ~ 180 사이의 값밖에 나오지 않는다.
