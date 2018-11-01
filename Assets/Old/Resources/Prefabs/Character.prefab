@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 61966895004738686}
   - component: {fileID: 114662753761941254}
   m_Layer: 0
-  m_Name: AttackArea
+  m_Name: AttackArea1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -485,7 +485,7 @@ MonoBehaviour:
   - {fileID: 114549431777545064}
   - {fileID: 114505340790484646}
   charImg: {fileID: 1094844748986790}
-  attackArea: {fileID: 1611112875354182}
+  attackArea: {fileID: 0}
   animator: {fileID: 95583521619637308}
 --- !u!114 &114362725651463734
 MonoBehaviour:
