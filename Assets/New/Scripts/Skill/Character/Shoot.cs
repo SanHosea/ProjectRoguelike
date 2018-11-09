@@ -7,7 +7,7 @@ public class Shoot : SkillBase {
 	private Bullet bulletPrefab;
 	public override void Initialize()
 	{
-		coolTime = 3.0f;
+		coolTime = 1.0f;
 		base.Initialize();
 	}
 	public override void Updated() 
@@ -18,7 +18,7 @@ public class Shoot : SkillBase {
 	{
 		// 원거리 공격에 사용되는 수명값은 5
 		// 따라서 5.1f 이상일 때 사용할 수 있도록 함.
-		if (CanFireSkill() && character.CurLife >= 5.1f)
+		if (CanFireSkill() && character.CurLife >= 2.1f)
 		{
 			// 오브젝트 세팅
 			// 공격력은 캐릭터의 50%
