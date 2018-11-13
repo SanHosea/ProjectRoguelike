@@ -15,9 +15,9 @@ public class RushAttack : SkillBase {
 	// 돌진하는 방향
 	private Vector2 rushDir;
 	private Vector3 characterPos;
-	private Vector3 monsterPos;
 	// 돌진 스피드
 	public float rushSpeed = 3;
+
 	public override void Initialize()
 	{
 		coolTime = 3.0f;
@@ -30,13 +30,16 @@ public class RushAttack : SkillBase {
 	{
 		base.Updated();	
 
-		if (Mathf.Abs((Vector2.SqrMagnitude(character.transform.position - monster.transform.position))) >= distance 
-					&& monster.CurState == STATE.TRACE)
+		if (Mathf.Abs((Vector2.SqrMagnitude(character.transform.position - monster.transform.position))) >= distance)
 		{
 			checkTime += Time.deltaTime;
 			
 			if (checkTime >= 5.0f)
 			{
+				characterPos = character.transform.position;
+				rushDir = characterPos - monster.transform.position;
+				rushDir.Normalize();
+				Debug.Log(rushDir * 3);
 				monster.CurState = STATE.ATTACK;
 			}
 		}
@@ -50,10 +53,7 @@ public class RushAttack : SkillBase {
 	{
 		if (CanFireSkill())
 		{
-			characterPos = character.transform.position;
-			monsterPos = monster.transform.position;
-			rushDir = characterPos - monsterPos;
-			rushDir.Normalize();
+			monster.CurState = STATE.NONE;
 			StartCoroutine(Attack(character));
 			CurTime = 0;
 			checkTime = 0;
@@ -69,7 +69,7 @@ public class RushAttack : SkillBase {
 		attackArea.gameObject.SetActive(true);
 		// 캐릭터가 몬스터 왼쪽에 있을 경우
 		// 회전각에 마이너스 값을 곱해줘서 반대방향으로 올바르게 돌 수 있도록 한다.
-		if (characterPos.x < monsterPos.x)
+		if (characterPos.x < monster.transform.position.x)
 		{
 			theta *= -1;
 		}
@@ -80,11 +80,12 @@ public class RushAttack : SkillBase {
 		// 돌진
 		// 여기서부터 만들어야 함
 		attackArea.gameObject.SetActive(false);
-		StartCoroutine(Rush(monsterPos, rushDir * 3));
+		StartCoroutine(Rush(monster.transform.position, rushDir * 3));
 	}
 
 	private IEnumerator Rush(Vector2 start, Vector2 end)
 	{
+		Debug.Log(end);
 		float time = 0;
 		while (true)
 		{
@@ -93,14 +94,14 @@ public class RushAttack : SkillBase {
 
 			if (time >= 1.0f)
 			{
+				CurTime = 0;
+				checkTime = 0;
+				monster.CurState = STATE.TRACE;
 				break;
 			}
 
 			yield return null;
 		}
-		CurTime = 0;
-		checkTime = 0;
-		monster.CurState = STATE.TRACE;
 	}
 
 	// 두 벡터의 회전각은 0 ~ 180 사이의 값밖에 나오지 않는다.

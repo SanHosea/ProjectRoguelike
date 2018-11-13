@@ -86,7 +86,8 @@ public class TempBoss : MonsterBase {
 	private void OnCollisionEnter2D(Collision2D other) {
 		if (other.gameObject.CompareTag("Character"))
 		{
-			 bTouchCharacter = true;
+			other.gameObject.GetComponent<CharacterBase>().CurHP -= 1; 
+			bTouchCharacter = true;
 		}
 	}
 }
